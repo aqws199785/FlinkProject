@@ -1,0 +1,26 @@
+/*
+* 定义完成后 双击maven 对应的包 =》 Plugins =》protobuf =》protobuf:compile
+* 生成protobuf的java类
+* 在 target 对应的包名和类名中可以看到这个类
+*/
+
+// protobuf 的语法 一般设置为protobuf3
+syntax = "proto3";
+
+// 生成的protobuf所在的包名和类名
+option java_package = "protobuf";
+option java_outer_classname = "CanalModel";
+
+message RowData {
+
+    // 元数据相关的字段
+    string logfileName = 15;
+    uint64 logfileOffset = 14;
+    uint32 executeTime = 1 ;
+    string schemaName = 2;
+    string tableName = 3;
+    string eventType = 4;
+
+    // 列数据类型
+    map<string, string> columns = 5;
+}

@@ -6,14 +6,14 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
 import sink.HDFSSink;
 import utils.GlobalConfUtil;
-import utils.KafkaUtil;
+import utils.FlinkKafkaUtil;
 
 public class KafkaProcess {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(6);
 
-        KafkaUtil kafkaUtil = new KafkaUtil();
+        FlinkKafkaUtil kafkaUtil = new FlinkKafkaUtil();
         GlobalConfUtil globalConfUtil = new GlobalConfUtil();
         FlinkKafkaConsumer011 kafkaConsumer = kafkaUtil.KafkaConsumer(globalConfUtil.getKafka_topic());
 

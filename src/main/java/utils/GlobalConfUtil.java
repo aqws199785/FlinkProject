@@ -6,10 +6,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 
-@Getter @Setter
+@Getter
+@Setter
 public class GlobalConfUtil {
-    String bootstrap_servers;
 
+    // kafka配置的变量
+    String bootstrap_servers;
     String zookeeper_servers;
     String group_id;
     String enable_auto_commit;
@@ -17,14 +19,27 @@ public class GlobalConfUtil {
     String auto_offset_reset;
     String key_serializer;
     String value_serializer;
-    String kafka_topic;
 
+    String batch_size;
+    String ack;
+    String retries;
+    String client_id;
+
+    String topic;
+
+    // mysql 相关配置
     String mysql_server_url;
     String mysql_server_ip;
     String mysql_server_port;
     String mysql_server_database;
     String mysql_server_username;
     String mysql_server_password;
+
+    // canal 相关配置
+    String canal_destination;
+    String canal_username;
+    String canal_password;
+    String canal_subscribe;
 
 
     public GlobalConfUtil() {
@@ -38,19 +53,36 @@ public class GlobalConfUtil {
         this.key_serializer = config.getString("key.serializer");
         this.value_serializer = config.getString("key.deserializer");
 
+        this.batch_size=config.getString("batch_size");
+        this.ack=config.getString("ack");
+        this.retries=config.getString("retries");
+        this.client_id=config.getString("client_id");
+
+        this.topic = config.getString("topic");
+
         this.mysql_server_url = config.getString("mysql.server.url");
         this.mysql_server_ip = config.getString("mysql.server.ip");
         this.mysql_server_port = config.getString("mysql.server.port");
         this.mysql_server_database = config.getString("mysql.server.database");
         this.mysql_server_username = config.getString("mysql.server.username");
         this.mysql_server_password = config.getString("mysql.server.password");
-        this.kafka_topic = config.getString("kafka.topic");
+
+        this.canal_destination = config.getString("canal.destination");
+        this.canal_username = config.getString("canal.username");
+        this.canal_password = config.getString("canal.password");
+        this.canal_subscribe = config.getString("canal.subscribe");
     }
 
     public static void main(String[] args) {
         GlobalConfUtil confUtil = new GlobalConfUtil();
         System.out.println(confUtil.toString());
-        System.out.println(confUtil.mysql_server_password);
+        System.out.println(
+                confUtil.zookeeper_servers + "\n" +
+                        confUtil.canal_username + "\n" +
+                        confUtil.canal_password + "\n" +
+                        confUtil.canal_destination + "\n" +
+                        confUtil.canal_subscribe
+        );
     }
 
 }

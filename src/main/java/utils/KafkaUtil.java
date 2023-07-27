@@ -1,45 +1,30 @@
 package utils;
 
-import lombok.val;
-import lombok.var;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer011;
-import org.apache.flink.api.common.serialization.SimpleStringSchema;
-import org.apache.flink.streaming.connectors.kafka.internals.KeyedSerializationSchemaWrapper;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
 
+import java.util.Map;
 import java.util.Properties;
 
-/*
- * 创建一个kafka的工具类
- * (1) 从kafka消费数据
- * (2) 向kafka发送数据
- * */
-
 public class KafkaUtil {
-
-    KafkaProperties kafkaProperties = new KafkaProperties();
+    private KafkaProducer kafkaProducer;
+    private Properties properties;
 
     public KafkaUtil() {
+        GlobalConfUtil globalConfUtil = new GlobalConfUtil();
+        properties = new Properties();
+        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, globalConfUtil.bootstrap_servers);
+        properties.put(ProducerConfig.BATCH_SIZE_CONFIG, globalConfUtil.batch_size);
+        properties.put(ProducerConfig.ACKS_CONFIG, globalConfUtil.ack);
+        properties.put(ProducerConfig.RETRIES_CONFIG, globalConfUtil.retries);
+        properties.put(ProducerConfig.CLIENT_ID_CONFIG, globalConfUtil.client_id);
+        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, globalConfUtil.key_serializer);
+        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, globalConfUtil.value_serializer);
+        this.kafkaProducer = new KafkaProducer(properties);
     }
 
-    public FlinkKafkaConsumer011<String> KafkaConsumer(String topic) {
-        GlobalConfUtil confUtil = new GlobalConfUtil();
-        FlinkKafkaConsumer011<String> KafkaConsumer = new FlinkKafkaConsumer011<String>(
-                topic,
-                new SimpleStringSchema(),
-                kafkaProperties.getKafkaProperties()
-        );
-        return KafkaConsumer;
+    public void send(Map map){
+
     }
 
-    public FlinkKafkaProducer011<String> kafkaProducer(String topic) {
-        KafkaProperties properties = new KafkaProperties();
-        Properties kafkaProperties = properties.getKafkaProperties();
-        FlinkKafkaProducer011 kafkaProducer = new FlinkKafkaProducer011(
-                topic,
-                new KeyedSerializationSchemaWrapper(new SimpleStringSchema()),
-                kafkaProperties
-        );
-        return kafkaProducer;
-    }
 }

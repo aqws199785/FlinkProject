@@ -1,5 +1,6 @@
 package utils;
 
+import bean.CanalRowData;
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.client.CanalConnectors;
 import com.alibaba.otter.canal.protocol.CanalEntry;
@@ -90,9 +91,10 @@ public class CanalClient {
 
                         map.put("column", columnDataMap);
 
-
-
-                        System.out.println(map);
+                        CanalRowData canalRowData = new CanalRowData(map);
+                        KafkaUtil kafkaUtil = new KafkaUtil();
+                        kafkaUtil.send(canalRowData);
+                        System.out.println(canalRowData.getSchemaName());
                     }
                 }
             }

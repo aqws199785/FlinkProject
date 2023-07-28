@@ -2,16 +2,17 @@ package utils;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
-
-import java.util.Map;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import bean.CanalRowData;
 import java.util.Properties;
 
 public class KafkaUtil {
     private KafkaProducer kafkaProducer;
     private Properties properties;
 
+    GlobalConfUtil globalConfUtil = new GlobalConfUtil();
+
     public KafkaUtil() {
-        GlobalConfUtil globalConfUtil = new GlobalConfUtil();
         properties = new Properties();
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, globalConfUtil.bootstrap_servers);
         properties.put(ProducerConfig.BATCH_SIZE_CONFIG, globalConfUtil.batch_size);
@@ -22,9 +23,9 @@ public class KafkaUtil {
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, globalConfUtil.value_serializer);
         this.kafkaProducer = new KafkaProducer(properties);
     }
-
-    public void send(Map map){
-
+    // 将数据发送到kafka
+    public void send(CanalRowData canalRowData) {
+        ProducerRecord producerRecord = new ProducerRecord(globalConfUtil.topic, canalRowData);
+        kafkaProducer.send(producerRecord);
     }
-
 }

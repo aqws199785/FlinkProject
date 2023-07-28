@@ -18,6 +18,7 @@ public class GlobalConfUtil {
     String auto_commit_interval_ms;
     String auto_offset_reset;
     String key_serializer;
+    String key_deserializer;
     String value_serializer;
 
     String batch_size;
@@ -50,8 +51,10 @@ public class GlobalConfUtil {
         this.enable_auto_commit = config.getString("enable.auto.commit");
         this.auto_commit_interval_ms = config.getString("auto.commit.interval.ms");
         this.auto_offset_reset = config.getString("auto.offset.reset");
+
         this.key_serializer = config.getString("key.serializer");
-        this.value_serializer = config.getString("key.deserializer");
+        this.key_deserializer = config.getString("key.deserializer");
+        this.value_serializer = config.getString("value.serializer");
 
         this.batch_size=config.getString("batch_size");
         this.ack=config.getString("ack");

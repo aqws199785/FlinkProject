@@ -15,7 +15,7 @@ public class KafkaProcess {
 
         FlinkKafkaUtil kafkaUtil = new FlinkKafkaUtil();
         GlobalConfUtil globalConfUtil = new GlobalConfUtil();
-        FlinkKafkaConsumer011 kafkaConsumer = kafkaUtil.KafkaConsumer(globalConfUtil.getKafka_topic());
+        FlinkKafkaConsumer011 kafkaConsumer = kafkaUtil.KafkaConsumer(globalConfUtil.getTopic());
 
         DataStreamSource<String> kafkaDataStream = env.addSource(kafkaConsumer);
         HDFSSink hdfsSink = new HDFSSink("hdfs://person101:8020/user", "user", ".txt");

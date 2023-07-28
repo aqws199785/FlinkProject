@@ -16,7 +16,7 @@ message RowData {
     // 元数据相关的字段
     string logfileName = 15;
     uint64 logfileOffset = 14;
-    uint32 executeTime = 1 ;
+    uint64 executeTime = 1 ;
     string schemaName = 2;
     string tableName = 3;
     string eventType = 4;

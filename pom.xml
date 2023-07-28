@@ -29,6 +29,7 @@
         <mysql.version>8.0.19</mysql.version>
         <canal.version>1.1.6</canal.version>
         <protobuf.version>3.4.0</protobuf.version>
+        <grpc.version>1.6.1</grpc.version>
     </properties>
 
     <dependencies>
@@ -196,6 +197,44 @@
             <version>1.1.2</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <!--该配置是自适应生成 ${os.detected.classifier} 虽然该变量可以设置为 windows-x86_64 但是不建议使用-->
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.7.0</version>
+            </extension>
+        </extensions>
+        <plugins>
+            <!--  该插件为protobuf plugins -->
+            <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.5.0</version>
+                <configuration>
+                    <pluginId>grpc-java</pluginId>
+                    <protocArtifact>
+                        com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
+                    </protocArtifact>
+                    <pluginArtifact>
+                        io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}
+                    </pluginArtifact>
+                    <!--  该参数指定 .proto文件所在的位置  建议所有的 .proto文件编写在同一目录下 -->
+                    <protoSourceRoot>src/main/java/proto</protoSourceRoot>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>compile-custom</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 
 </project>

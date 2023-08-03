@@ -1,5 +1,7 @@
 package utils;
 
+import bean.CanalRowData;
+import deserializter.CanalRowDataDeserializerSchema;
 import lombok.val;
 import lombok.var;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
@@ -22,14 +24,24 @@ public class FlinkKafkaUtil {
     public FlinkKafkaUtil() {
     }
 
+    // 用以消费发送到kafka的日志数据
     public FlinkKafkaConsumer011<String> KafkaConsumer(String topic) {
-        GlobalConfUtil confUtil = new GlobalConfUtil();
         FlinkKafkaConsumer011<String> KafkaConsumer = new FlinkKafkaConsumer011<String>(
                 topic,
                 new SimpleStringSchema(),
                 kafkaProperties.getKafkaProperties()
         );
         return KafkaConsumer;
+    }
+
+    // 用以消费发送到kafka的业务数据
+    public FlinkKafkaConsumer011<CanalRowData> kafkaConsumer(String topic) {
+        FlinkKafkaConsumer011<CanalRowData> kafkaConsumer = new FlinkKafkaConsumer011<CanalRowData>(
+                topic,
+                new CanalRowDataDeserializerSchema(),
+                kafkaProperties.getKafkaProperties()
+        );
+        return kafkaConsumer;
     }
 
     public FlinkKafkaProducer011<String> kafkaProducer(String topic) {

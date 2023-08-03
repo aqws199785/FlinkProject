@@ -1,18 +1,29 @@
 package bean;
 
+import annotation.Column;
+import annotation.RowKey;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
-public class User {
-    String name;
-    String gender;
-    String action;
+public class User implements Serializable {
+    @RowKey
+    @Column
     Integer num;
+    @RowKey
+    @Column
+    String name;
+    @Column
+    String gender;
+    @Column
+    String action;
     Long ts;
 
-    public User(){}
+    public User() {
+    }
 
     public User(String name, String gender, String action, Integer num, Long ts) {
         this.name = name;

@@ -47,7 +47,7 @@ public class CanalRowData implements ProtobufAble {
             this.schemaName = rowData.getSchemaName();
             this.tableName = rowData.getTableName();
             this.eventType = rowData.getEventType();
-            this.columns = new HashMap<>();
+            this.columns = new HashMap<String,String>();
             this.columns.putAll(rowData.getColumnsMap());
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
@@ -59,13 +59,15 @@ public class CanalRowData implements ProtobufAble {
     public byte[] toBytes() {
         CanalModel.RowData.Builder builder = CanalModel.RowData.newBuilder();
         builder.setLogfileName(this.logfileName);
+        System.out.println(this);
         builder.setLogfileOffset(this.logfileOffset);
         builder.setExecuteTime(this.executeTime);
         builder.setSchemaName(this.schemaName);
         builder.setTableName(this.tableName);
         builder.setEventType(this.eventType);
-        builder.putAllColumns(this.columns);
-
+        if (this.columns!=null) {
+            builder.putAllColumns(this.columns);
+        }
         return builder.build().toByteArray();
     }
 

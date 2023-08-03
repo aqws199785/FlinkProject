@@ -83,20 +83,20 @@ public class CanalClient {
                                     for (CanalEntry.Column column : rowData.getBeforeColumnsList()) {
                                         columnDataMap.put(column.getName(), column.getValue());
                                     }
+                                } else {
+                                    continue;
                                 }
                             }
+                            map.put("columns", columnDataMap);
                         } catch (InvalidProtocolBufferException e) {
                             e.printStackTrace();
                         }
-
-                        map.put("column", columnDataMap);
-
-                        CanalRowData canalRowData = new CanalRowData(map);
-                        KafkaUtil kafkaUtil = new KafkaUtil();
-                        kafkaUtil.send(canalRowData);
-                        System.out.println(canalRowData.getSchemaName());
                     }
                 }
+                CanalRowData canalRowData = new CanalRowData(map);
+                KafkaUtil kafkaUtil = new KafkaUtil();
+                System.out.println(canalRowData.getColumns());
+                kafkaUtil.send(canalRowData);
             }
         }
     }

@@ -27,11 +27,15 @@ public class GlobalConfUtil {
     String client_id;
 
     String topic;
+    String dwd_user_action_mysql;
+    String dwd_shop_sell_mysql;
+    String dwd_user_click_log;
+
 
     // mysql 相关配置
     String mysql_server_url;
     String mysql_server_ip;
-    String mysql_server_port;
+    int mysql_server_port;
     String mysql_server_database;
     String mysql_server_username;
     String mysql_server_password;
@@ -56,16 +60,19 @@ public class GlobalConfUtil {
         this.key_deserializer = config.getString("key.deserializer");
         this.value_serializer = config.getString("value.serializer");
 
-        this.batch_size=config.getString("batch_size");
-        this.ack=config.getString("ack");
-        this.retries=config.getString("retries");
-        this.client_id=config.getString("client_id");
+        this.batch_size = config.getString("batch_size");
+        this.ack = config.getString("ack");
+        this.retries = config.getString("retries");
+        this.client_id = config.getString("client_id");
 
         this.topic = config.getString("topic");
+        this.dwd_user_action_mysql = config.getString("dwd_user_action_mysql");
+        this.dwd_shop_sell_mysql=config.getString("dwd_shop_sell_mysql");
+        this.dwd_user_click_log=config.getString("dwd_user_click_log");
 
         this.mysql_server_url = config.getString("mysql.server.url");
         this.mysql_server_ip = config.getString("mysql.server.ip");
-        this.mysql_server_port = config.getString("mysql.server.port");
+        this.mysql_server_port = config.getInt("mysql.server.port");
         this.mysql_server_database = config.getString("mysql.server.database");
         this.mysql_server_username = config.getString("mysql.server.username");
         this.mysql_server_password = config.getString("mysql.server.password");

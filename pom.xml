@@ -19,7 +19,7 @@
         <scala.version>2.12</scala.version>
         <flink.version>1.12.0</flink.version>
 
-        <mysql.cdc.version>2.1.0</mysql.cdc.version>
+        <mysql.cdc.version>2.2.0</mysql.cdc.version>
         <hadoop.version>3.1.3</hadoop.version>
         <fastjson2.version>2.0.4</fastjson2.version>
         <lombok.version>1.18.16</lombok.version>
@@ -30,6 +30,10 @@
         <canal.version>1.1.6</canal.version>
         <protobuf.version>3.4.0</protobuf.version>
         <grpc.version>1.6.1</grpc.version>
+
+        <hbase.version>2.4.17</hbase.version>
+        <pool2.version>2.4.3</pool2.version>
+
     </properties>
 
     <dependencies>
@@ -196,6 +200,28 @@
             <artifactId>canal.client</artifactId>
             <version>1.1.2</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.hbase/hbase-client -->
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-client</artifactId>
+            <version>${hbase.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-auth</artifactId>
+            <version>${hadoop.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-pool2 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+            <version>${pool2.version}</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

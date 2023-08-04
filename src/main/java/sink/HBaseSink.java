@@ -1,5 +1,6 @@
 package sink;
 
+import annotation.RowKey;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -9,12 +10,16 @@ import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
-
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+
+/*
+* 一个HBase工具类
+* 可以根据JavaBean的注解自动解析出rowKey和Column
+* */
 
 public class HBaseSink<T> extends RichSinkFunction<T> {
 
@@ -48,48 +53,47 @@ public class HBaseSink<T> extends RichSinkFunction<T> {
     public void invoke(T t, Context context) throws Exception {
         Class<?> tClass = t.getClass();
         Field[] fields = tClass.getDeclaredFields();
+        // 存储rowKey的字符串和存储对象属性名称和值
         StringBuilder rowKeyBuilder = new StringBuilder();
+        HashMap<byte[], byte[]> map = new HashMap<>();
 
+        // 遍历获取rowKey拼接和属性名称、值的Map
         for (Field field : fields) {
             // Accessible:可访问的 反射获得的属性都是私有的 如果不设置会报错
             field.setAccessible(true);
-            Object value = field.get(t);
+            Object object = field.get(t);
             String fieldName = field.getName();
             Annotation[] annotations = field.getAnnotations();
-            HashMap<String, byte[]> map = new HashMap<>();
-            // 编写一个由注解获取主键字段和列字段 方法需要优化为执行一次
-
-
             for (Annotation annotation : annotations) {
                 String annotationName = annotation.annotationType().getName();
                 if (annotationName.equals("annotation.RowKey")) {
-                    rowKeyBuilder.append("-").append(fieldName);
+                    rowKeyBuilder.append("-").append(object);
                 } else if (annotationName.equals("annotation.Column")) {
-                    byte[] bytes = Bytes.toBytes(value.toString());
-                    map.put(fieldName, bytes);
+                    // 序列化为字节码 减少map的空间占用
+                    byte[] key = Bytes.toBytes(fieldName);
+                    byte[] value = Bytes.toBytes(object.toString());
+                    map.put(key, value);
                 }
             }
-            for (Map.Entry entry : map.entrySet()) {
-
-            }
-
         }
-
-
-        String key = rowKeyBuilder.toString().substring(1);
-
-        byte[] rowKey = Bytes.toBytes("123");
-        byte[] family = Bytes.toBytes("detail");
+        // 除去StringBuilder前面的 "-" 字符串
+        String rowKeyStr = rowKeyBuilder.substring(1);
+        byte[] rowKey = Bytes.toBytes(rowKeyStr);
+        byte[] family = Bytes.toBytes("family");
         Put put = new Put(rowKey);
-        byte[] id = Bytes.toBytes("num");
-        byte[] name = Bytes.toBytes("name");
-        byte[] gender = Bytes.toBytes("gender");
-        put.addColumn(family, id, Bytes.toBytes("zhansan"));
+        for (Map.Entry<byte[], byte[]> entry : map.entrySet()) {
+            put.addColumn(family, entry.getKey(), entry.getValue());
+        }
         table.put(put);
-
-    }
-
-    public static void fun(Annotation[] annotations) {
-
+//
+//        String key = rowKeyBuilder.toString().substring(1);
+//        byte[] rowKey = Bytes.toBytes("123");
+//        byte[] family = Bytes.toBytes("detail");
+//        Put put2 = new Put(rowKey);
+//        byte[] id = Bytes.toBytes("num");
+//        byte[] name = Bytes.toBytes("name");
+//        byte[] gender = Bytes.toBytes("gender");
+//        put2.addColumn(family, id, Bytes.toBytes("zhansan"));
+//        table.put(put2);
     }
 }

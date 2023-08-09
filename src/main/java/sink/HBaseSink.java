@@ -1,6 +1,5 @@
 package sink;
 
-import annotation.RowKey;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -10,6 +9,8 @@ import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.util.Bytes;
+import utils.GlobalConfUtil;
+
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -19,6 +20,7 @@ import java.util.Map;
 /*
 * 一个HBase工具类
 * 可以根据JavaBean的注解自动解析出rowKey和Column
+* 注意：key获取目前是按照JavaBean对象的属性顺序拼接
 * */
 
 public class HBaseSink<T> extends RichSinkFunction<T> {
@@ -35,12 +37,14 @@ public class HBaseSink<T> extends RichSinkFunction<T> {
 
     @Override
     public void open(org.apache.flink.configuration.Configuration parameters) throws IOException {
+        GlobalConfUtil conf = new GlobalConfUtil();
         hbaseConfig = HBaseConfiguration.create();
-        hbaseConfig.set("hbase.zookeeper.quorum", "person101,person102,person103");
-        hbaseConfig.set("habse.zookeeper.property.clientPort", "2181");
-        hbaseConfig.set("hbase.master", "person101:60020");
+        hbaseConfig.set(conf.getHbase_zookeeper_quorum_key(),conf.getHbase_zookeeper_quorum_value());
+        hbaseConfig.set(conf.getHabse_zookeeper_property_clientPort_key(),conf.getHabse_zookeeper_property_clientPort_value());
+        hbaseConfig.set(conf.getHbase_master_key(),conf.getHbase_master_value());
+
         connection = ConnectionFactory.createConnection(hbaseConfig);
-        table = connection.getTable(TableName.valueOf("dim_user_info"));
+        table = connection.getTable(TableName.valueOf(conf.getHbase_dim_table()));
     }
 
     @Override
@@ -85,15 +89,5 @@ public class HBaseSink<T> extends RichSinkFunction<T> {
             put.addColumn(family, entry.getKey(), entry.getValue());
         }
         table.put(put);
-//
-//        String key = rowKeyBuilder.toString().substring(1);
-//        byte[] rowKey = Bytes.toBytes("123");
-//        byte[] family = Bytes.toBytes("detail");
-//        Put put2 = new Put(rowKey);
-//        byte[] id = Bytes.toBytes("num");
-//        byte[] name = Bytes.toBytes("name");
-//        byte[] gender = Bytes.toBytes("gender");
-//        put2.addColumn(family, id, Bytes.toBytes("zhansan"));
-//        table.put(put2);
     }
 }

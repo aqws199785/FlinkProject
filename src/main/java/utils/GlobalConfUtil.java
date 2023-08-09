@@ -5,6 +5,9 @@ import com.typesafe.config.ConfigFactory;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -45,6 +48,22 @@ public class GlobalConfUtil {
     String canal_username;
     String canal_password;
     String canal_subscribe;
+    // HBase
+    String hbase_zookeeper_quorum_key;
+    String hbase_zookeeper_quorum_value;
+    String habse_zookeeper_property_clientPort_key;
+    String habse_zookeeper_property_clientPort_value;
+    String hbase_master_key;
+    String hbase_master_value;
+    String hbase_dim_table;
+
+
+    // ElasticSearch配置
+    String elasticsearch_master_hostname;
+    List<String> elasticsearch_cluster_hostname;
+    int elasticsearch_port;
+    String elasticsearch_scheme;
+    String elasticsearch_user_index;
 
 
     public GlobalConfUtil() {
@@ -67,8 +86,8 @@ public class GlobalConfUtil {
 
         this.topic = config.getString("topic");
         this.dwd_user_action_mysql = config.getString("dwd_user_action_mysql");
-        this.dwd_shop_sell_mysql=config.getString("dwd_shop_sell_mysql");
-        this.dwd_user_click_log=config.getString("dwd_user_click_log");
+        this.dwd_shop_sell_mysql = config.getString("dwd_shop_sell_mysql");
+        this.dwd_user_click_log = config.getString("dwd_user_click_log");
 
         this.mysql_server_url = config.getString("mysql.server.url");
         this.mysql_server_ip = config.getString("mysql.server.ip");
@@ -81,6 +100,20 @@ public class GlobalConfUtil {
         this.canal_username = config.getString("canal.username");
         this.canal_password = config.getString("canal.password");
         this.canal_subscribe = config.getString("canal.subscribe");
+        // 获取HBase配置
+        this.hbase_zookeeper_quorum_key = config.getString("hbase_zookeeper_quorum_key");
+        this.hbase_zookeeper_quorum_value = config.getString("hbase_zookeeper_quorum_value");
+        this.habse_zookeeper_property_clientPort_key = config.getString("habse_zookeeper_property_clientPort_key");
+        this.habse_zookeeper_property_clientPort_value = config.getString("habse_zookeeper_property_clientPort_value");
+        this.hbase_master_key = config.getString("hbase_master_key");
+        this.hbase_master_value = config.getString("hbase_master_value");
+        this.hbase_dim_table = config.getString("hbase_dim_table");
+        // ElasticSearch配置
+        this.elasticsearch_master_hostname = config.getString("elasticsearch_master_hostname");
+        this.elasticsearch_cluster_hostname = config.getStringList("elasticsearch_cluster_hostname");
+        this.elasticsearch_port = config.getInt("elasticsearch_port");
+        this.elasticsearch_scheme = config.getString("elasticsearch_scheme");
+        this.elasticsearch_user_index = config.getString("elasticsearch_user_index");
     }
 
     public static void main(String[] args) {

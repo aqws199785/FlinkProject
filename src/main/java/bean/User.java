@@ -36,4 +36,13 @@ public class User implements Serializable {
         this.num = num;
         this.ts = ts;
     }
+
+    @Override
+    public String toString() {
+        return "name:" + this.name + "\t" +
+                "gender:" + this.gender + "\t" +
+                "action:" + this.action + "\t" +
+                "num:" + this.num + "\t" +
+                "ts:" + this.ts;
+    }
 }

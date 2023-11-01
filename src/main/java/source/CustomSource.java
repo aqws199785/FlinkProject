@@ -30,13 +30,14 @@ public class CustomSource implements ParallelSourceFunction<User> {
             int actionIndex = random.nextInt(actionArr.length);
             int action_num = random.nextInt(5);
             for (int n = 0; n < random.nextInt(10); n++) {
+                long ts = (i + n) * 1000L;
                 sourceContext.collect(
                         new User(
                                 nameArr[nameIndex],
                                 genderArr[genderIndex],
                                 actionArr[actionIndex],
                                 action_num,
-                                (long) (i + n) * 1000L
+                                ts
                         )
                 );
             }
